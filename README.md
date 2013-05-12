@@ -21,32 +21,10 @@ Attributes
 ----------
 
 #### wal_e::default
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['wal_e']['aws_access_key_id']</tt></td>
-    <td>String</td>
-    <td>AWS Access Key</td>
-    <td><tt> </tt></td>
-  </tr>
-  <tr>
-    <td><tt>['wal_e']['aws_secret_access_key']</tt></td>
-    <td>String</td>
-    <td>AWS Secret</td>
-    <td><tt> </tt></td>
-  </tr>
-  <tr>
-    <td><tt>['wal_e']['wale_s3_prefix']</tt></td>
-    <td>String</td>
-    <td>S3 url for the bucket where postgres WAL and backups will be stored</td>
-    <td><tt>s3://your-lower-case-bucket-name/wal-e/</tt></td>
-  </tr>    
-</table>
+- `['wal_e']['aws_access_key_id']` : AWS Access Key
+- `['wal_e']['aws_secret_access_key']` : AWS Secret
+- `['wal_e']['wale_s3_prefix']` : S3 url for the bucket where postgres WAL and backups will be stored
+  - i.e. s3://your-lower-case-bucket-name/whatever/wal-e/
 
 Usage
 -----
