@@ -1,27 +1,26 @@
-wal-e-cookbook Cookbook
+wal-e-cookbook
 =======================
-TODO: Enter the cookbook description here.
+chef cookbook for installing wal-e (postgres continuous archiving to s3)
 
-* see https://github.com/wal-e/wal-e
-* see http://blog.opbeat.com/2013/01/07/postgresql-backup-to-s3-part-one/
+* [https://github.com/wal-e/wal-e](https://github.com/wal-e/wal-e)
+* [http://www.postgresql.org/docs/9.1/static/continuous-archiving.html](http://www.postgresql.org/docs/9.1/static/continuous-archiving.html)
+* This recipe automates many of the steps from this excellent article: [http://blog.opbeat.com/2013/01/07/postgresql-backup-to-s3-part-one/](http://blog.opbeat.com/2013/01/07/postgresql-backup-to-s3-part-one/)
 
-e.g.
-This cookbook makes your favorite breakfast sandwhich.
+See sample usage: [here](https://github.com/house9/use_wal_e)
 
 Requirements
 ------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
+This cookbook has been developed and tested on ubuntu servers only
 
-e.g.
 #### packages
-- `toaster` - wal-e-cookbook needs toaster to brown your bagel.
+- `postgresql` - optionally use [databox-cookbook](https://github.com/teohm/databox-cookbook) which includes postgresql
+- `python` - wal-e is installed using python pip (package management system)
+- `git` - required to install wal-e using pip over git 
 
 Attributes
 ----------
-TODO: List you cookbook attributes here.
 
-e.g.
-#### wal-e-cookbook::default
+#### wal_e::default
 <table>
   <tr>
     <th>Key</th>
@@ -30,47 +29,64 @@ e.g.
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>['wal-e-cookbook']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
+    <td><tt>['wal_e']['aws_access_key_id']</tt></td>
+    <td>String</td>
+    <td>AWS Access Key</td>
+    <td><tt> </tt></td>
   </tr>
+  <tr>
+    <td><tt>['wal_e']['aws_secret_access_key']</tt></td>
+    <td>String</td>
+    <td>AWS Secret</td>
+    <td><tt> </tt></td>
+  </tr>
+  <tr>
+    <td><tt>['wal_e']['wale_s3_prefix']</tt></td>
+    <td>String</td>
+    <td>S3 url for the bucket where postgres WAL and backups will be stored</td>
+    <td><tt>s3://your-lower-case-bucket-name/wal-e/</tt></td>
+  </tr>    
 </table>
 
 Usage
 -----
-#### wal-e-cookbook::default
-TODO: Write usage instructions for each cookbook.
+#### wal_e::default
 
-e.g.
-Just include `wal-e-cookbook` in your node's `run_list`:
+Include `wal_e` in your node's `run_list`:
 
-```json
+```
 {
   "name":"my_node",
   "run_list": [
-    "recipe[wal-e-cookbook]"
+    "recipe[wal_e]"
   ]
 }
 ```
 
+and specify all 3 of the S3 attributes needed by wal-e
+
+```
+"wal_e": {
+  "aws_secret_access_key": "SECRET",
+  "aws_access_key_id": "ACCESS_KEY",
+  "wale_s3_prefix": "s3://your-lower-case-bucket-name/wal-e/or_whatever"
+}
+
+```
+
+
 TODO List
 ------------
-* update this README file
+* add configuration option to bring up a standby server or new server in recovery mode
 * move attributes to encrypted data bag
 * allow configuration of cron settings
 
 Contributing
 ------------
-TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
-
-e.g.
-1. Fork the repository on Github
-2. Create a named feature branch (like `add_component_x`)
-3. Write you change
-4. Write tests for your change (if applicable)
-5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
+- Fork the repository on Github
+- Create a named feature branch (like `add_component_x`)
+- Write your changes
+- Submit a Pull Request using Github
 
 License
 -------------------
