@@ -25,6 +25,8 @@ Attributes
 - `['wal_e']['aws_secret_access_key']` : AWS Secret
 - `['wal_e']['wale_s3_prefix']` : S3 url for the bucket where postgres WAL and backups will be stored
   - i.e. s3://your-lower-case-bucket-name/whatever/wal-e/
+- `['wal_e']['create_initial_backup']` : Boolean
+  - defaults to true, when false the initial WAL-e backup will not be created
 
 Usage
 -----
