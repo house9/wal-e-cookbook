@@ -81,11 +81,3 @@ cron "wal-e" do
   user "postgres"
   command backup_push_command
 end
-
-# Chef::Log.info "run the initial snap shot during the provision"
-execute "wal-e initial backup-push" do
-  user "postgres"
-  group "postgres"
-  command backup_push_command
-  only_if { ::Dir.glob("#{postgres_install_path}/pg_xlog/*.backup").empty? }
-end
