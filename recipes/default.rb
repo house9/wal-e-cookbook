@@ -13,10 +13,10 @@ end
 backup_push_command = "/usr/bin/envdir #{wal_e_env} /usr/local/bin/wal-e backup-push #{postgres_install_path}"
 
 # Chef::Log.info "update postgresql configuration for wal_archiving"
-node['postgresql']['config']["wal_level"] = "archive"
-node['postgresql']['config']["archive_mode"] = "on"
-node['postgresql']['config']["archive_command"] = "envdir /etc/wal-e.d/env /usr/local/bin/wal-e wal-push %p"
-node['postgresql']['config']["archive_timeout"] = 60
+node.set['postgresql']['config']["wal_level"] = "archive"
+node.set['postgresql']['config']["archive_mode"] = "on"
+node.set['postgresql']['config']["archive_command"] = "envdir /etc/wal-e.d/env /usr/local/bin/wal-e wal-push %p"
+node.set['postgresql']['config']["archive_timeout"] = 60
 
 # Chef::Log.info "install dependencies python, pip, etc..."
 include_recipe "git"
