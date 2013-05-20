@@ -5,9 +5,12 @@
 # Chef::Log.info "Enable wal-e for postgres"
 wal_e = node["wal_e"]
 wal_e_env = "/etc/wal-e.d/env"
-postgres_install_path = node['postgresql']['dir']
+if 'debian' == node['platform_family']
+  postgres_install_path = node['postgresql']['config']['data_directory']
+else
+  postgres_install_path = node['postgresql']['dir']
+end
 backup_push_command = "/usr/bin/envdir #{wal_e_env} /usr/local/bin/wal-e backup-push #{postgres_install_path}"
-
 
 # Chef::Log.info "update postgresql configuration for wal_archiving"
 node['postgresql']['config']["wal_level"] = "archive"
@@ -77,12 +80,4 @@ cron "wal-e" do
   # 0 2 * * * (Daily 2:00am)
   user "postgres"
   command backup_push_command
-end
-
-# Chef::Log.info "run the initial snap shot during the provision"
-execute "wal-e initial backup-push" do
-  user "postgres"
-  group "postgres"
-  command backup_push_command
-  only_if { ::Dir.glob("#{postgres_install_path}/pg_xlog/*.backup").empty? }
 end
