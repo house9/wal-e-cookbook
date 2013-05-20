@@ -5,9 +5,12 @@
 # Chef::Log.info "Enable wal-e for postgres"
 wal_e = node["wal_e"]
 wal_e_env = "/etc/wal-e.d/env"
-postgres_install_path = node['postgresql']['dir']
+if 'debian' == node['platform_family']
+  postgres_install_path = node['postgresql']['config']['data_directory']
+else
+  postgres_install_path = node['postgresql']['dir']
+end
 backup_push_command = "/usr/bin/envdir #{wal_e_env} /usr/local/bin/wal-e backup-push #{postgres_install_path}"
-
 
 # Chef::Log.info "update postgresql configuration for wal_archiving"
 node['postgresql']['config']["wal_level"] = "archive"
