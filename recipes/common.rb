@@ -5,6 +5,7 @@
 # Chef::Log.info "Enable wal-e for postgres"
 wal_e_config = node["wal_e"]
 wal_e_env = wal_e_config["d_env_path"]
+git_reference = wal_e_config["wale_git_install_reference"]
 
 # Chef::Log.info "install dependencies python, pip, etc..."
 include_recipe "git"
@@ -14,11 +15,31 @@ package "lzop"
 package "pv"
 package "libevent-dev"
 
-# Chef::Log.info "install wal-e via pip"
-python_pip "git+git://github.com/wal-e/wal-e.git#egg=wal-e" do
-  action :install
+# ===========================================
+install_wale_src_path = "/installs/wal-e-src"
+install_wale_marker_path = "/installs/wal-e-marker"
+
+directory "/installs" do
+  action :create
 end
 
+git install_wale_src_path do
+  repository "git://github.com/wal-e/wal-e.git"
+  revision git_reference
+  only_if { !::File.exists?(install_wale_marker_path) || ::IO.read(install_wale_marker_path) != git_reference }
+end
+
+execute "python setup.py install" do
+  cwd install_wale_src_path
+  only_if { !::File.exists?(install_wale_marker_path) || ::IO.read(install_wale_marker_path) != git_reference }
+end
+
+file install_wale_marker_path do
+  content git_reference
+end
+
+
+# ===========================================
 # Chef::Log.info "configure wal-e s3 envdir"
 directory "/etc/wal-e.d" do
   owner "root"
