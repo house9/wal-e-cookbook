@@ -1,4 +1,4 @@
-name             'wal-e-cookbook'
+name             'wal_e'
 maintainer       'Jesse House'
 maintainer_email 'mail@jessehouse.com'
 license          'The MIT License (MIT)'
