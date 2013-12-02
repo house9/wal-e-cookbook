@@ -22,6 +22,10 @@ node.set['postgresql']['config']["archive_mode"] = "on"
 node.set['postgresql']['config']["archive_command"] = "#{wal_e_config['exe']} wal-push %p"
 node.set['postgresql']['config']["archive_timeout"] = 60
 
+service 'postgresql' do
+  action :restart
+end
+
 Chef::Log.info "setup cron job to do create snap shots"
 cron "wal-e" do
   minute "00"
