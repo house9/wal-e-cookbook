@@ -24,7 +24,7 @@ directory "/installs" do
 end
 
 git install_wale_src_path do
-  repository "git://github.com/wal-e/wal-e.git"
+  repository "https://github.com/wal-e/wal-e.git"
   revision git_reference
   only_if { !::File.exists?(install_wale_marker_path) || ::IO.read(install_wale_marker_path) != git_reference }
 end
