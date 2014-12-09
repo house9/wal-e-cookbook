@@ -18,6 +18,7 @@ package "libevent-dev"
 # ===========================================
 install_wale_src_path = "/installs/wal-e-src"
 install_wale_marker_path = "/installs/wal-e-marker"
+needs_wal_e_install = !::File.exists?(install_wale_marker_path) || ::IO.read(install_wale_marker_path) != git_reference
 
 directory "/installs" do
   action :create
@@ -29,9 +30,20 @@ git install_wale_src_path do
   only_if { !::File.exists?(install_wale_marker_path) || ::IO.read(install_wale_marker_path) != git_reference }
 end
 
-execute "python setup.py install" do
+wal_e_setup_command = if wal_e_config["install_style"] == "pip"
+  # https://github.com/wal-e/wal-e/issues/143
+  execute "pip install --upgrade six" do
+    only_if { needs_wal_e_install }
+  end
+
+  "pip install -e git+https://github.com/wal-e/wal-e.git@#{git_reference}#egg=wal-e"
+else
+  "python setup.py install"
+end
+
+execute wal_e_setup_command do
   cwd install_wale_src_path
-  only_if { !::File.exists?(install_wale_marker_path) || ::IO.read(install_wale_marker_path) != git_reference }
+  only_if { needs_wal_e_install }
 end
 
 file install_wale_marker_path do

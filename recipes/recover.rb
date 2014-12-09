@@ -65,7 +65,13 @@ template "#{pg_data_path}/recovery.conf" do
   variables({
     :restore_command => restore_command,
     :recovery_target_timeline => recovery_target_timeline,
-    :recovery_target_time => recovery_target_time
+    :recovery_target_time => recovery_target_time,
+    :archive_cleanup_command => recover_config["archive_cleanup_command"],
+    :recovery_end_command => recover_config["recovery_end_command"],
+    :pause_at_recovery_target => recover_config["pause_at_recovery_target"],
+    :standby_mode => recover_config["standby_mode"],
+    :primary_conninfo => recover_config["primary_conninfo"],
+    :trigger_file => recover_config["trigger_file"]
   })
 end
 

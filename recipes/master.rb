@@ -17,7 +17,8 @@ end
 backup_push_command = "#{wal_e_config['exe']} backup-push #{pg_data_path}"
 
 Chef::Log.info "update postgresql configuration for wal_archiving"
-node.set['postgresql']['config']["wal_level"] = "archive"
+# http://www.postgresql.org/docs/9.3/static/runtime-config-wal.html#GUC-WAL-LEVEL
+node.set['postgresql']['config']["wal_level"] = "hot_standby" # minimal, archive or hot_standby
 node.set['postgresql']['config']["archive_mode"] = "on"
 node.set['postgresql']['config']["archive_command"] = "#{wal_e_config['exe']} wal-push %p"
 node.set['postgresql']['config']["archive_timeout"] = 60
